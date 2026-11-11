@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamza & Rudy ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Marhey:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe6eb 0%, #ffd1dc 50%, #ffb6c1 100%);
+            color: #4a2c35;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* خلفية القلوب المموهة */
+        .blur-hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .blur-heart {
+            position: absolute;
+            top: -50px;
+            color: rgba(233, 30, 99, 0.45);
+            font-size: 28px;
+            filter: blur(3px);
+            animation: fallBlur linear infinite;
+        }
+
+        @keyframes fallBlur {
+            0% {
+                transform: translateY(-50px) rotate(0deg) scale(0.8);
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.5;
+                filter: blur(5px);
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg) scale(1.3);
+                opacity: 0.1;
+            }
+        }
+
+        .container {
+            width: 90vw;
+            max-width: 520px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            min-height: 92vh;
+            margin: 20px auto;
+            border-radius: 30px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(233, 30, 99, 0.2), 0 0 15px rgba(255, 255, 255, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+        }
+
+        /* شاشة القفل */
+        #lock-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .envelope-box {
+            background: rgba(255, 255, 255, 0.9);
+            width: 95%;
+            padding: 40px 25px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
+            border: 2px dashed #ff4d6d;
+        }
+
+        .envelope-box h2 {
+            font-family: 'Marhey', cursive;
+            font-size: 22px;
+            color: #c9184a;
+            margin-bottom: 15px;
+        }
+
+        .seal {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ff4d6d, #c9184a);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 5px 15px rgba(201, 24, 74, 0.4);
+            animation: pulseHeart 1.5s infinite alternate;
+        }
+
+        @keyframes pulseHeart {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+
+        input[type="password"] {
+            width: 85%;
+            padding: 14px;
+            border: 2px solid #ff758f;
+            border-radius: 30px;
+            outline: none;
+            text-align: center;
+            font-size: 17px;
+            background: #fff;
+            margin-bottom: 20px;
+            color: #a4133c;
+            font-weight: bold;
+        }
+
+        .unlock-btn {
+            background: linear-gradient(135deg, #ff4d6d, #c9184a);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(201, 24, 74, 0.35);
+            transition: all 0.3s;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(201, 24, 74, 0.5);
+        }
+
+        .error-msg {
+            color: #d00000;
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+            font-weight: bold;
+        }
+
+        /* محتوى الموقع الأساسي */
+        #main-content {
+            display: none;
+            width: 100%;
+            padding: 25px 20px 130px 20px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-family: 'Marhey', cursive;
+            font-size: 24px;
+            color: #a4133c;
+            margin-bottom: 8px;
+        }
+
+        .date-header {
+            font-size: 15px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff4d6d, #c9184a);
+            padding: 8px 22px;
+            border-radius: 25px;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(201, 24, 74, 0.3);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 22px;
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.08);
+            margin-bottom: 22px;
+            line-height: 2;
+            font-size: 15px;
+            text-align: right;
+            border: 1px solid rgba(255, 182, 193, 0.6);
+        }
+
+        .card b {
+            color: #c9184a;
+            font-size: 17px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .counter-box {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 10px;
+            border-radius: 22px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 20px rgba(233, 30, 99, 0.08);
+            border: 1px solid rgba(255, 182, 193, 0.6);
+        }
+
+        .time-unit span {
+            display: block;
+            font-size: 24px;
+            font-weight: 800;
+            color: #ff4d6d;
+        }
+
+        .time-unit label {
+            font-size: 12px;
+            color: #888;
+            font-weight: bold;
+        }
+
+        .reasons-list {
+            list-style: none;
+            padding-right: 5px;
+        }
+
+        .reasons-list li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-right: 25px;
+        }
+
+        .reasons-list li::before {
+            content: "💖";
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .photo-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+            max-height: 380px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* مشغل الصوت */
+        .audio-player {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 88vw;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 40px;
+            box-shadow: 0 10px 25px rgba(201, 24, 74, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            border: 2px solid #ff758f;
+        }
+
+        .audio-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .audio-info img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            animation: rotateAlbum 4s linear infinite paused;
+            border: 2px solid #ff4d6d;
+        }
+
+        .audio-info img.playing {
+            animation-play-state: running;
+        }
+
+        @keyframes rotateAlbum {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .audio-info span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #a4133c;
+        }
+
+        audio {
+            display: none;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #ff4d6d, #c9184a);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(201, 24, 74, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blur-hearts-bg" id="blur-hearts-bg"></div>
+
+    <div class="container">
+        <!-- شاشة قفل الرسالة -->
+        <div id="lock-screen">
+            <div class="envelope-box">
+                <h2>إلى ملكة قلبي رودي ❤️</h2>
+                <div class="seal">💌</div>
+                <p style="font-size: 14px; margin-bottom: 20px; color: #666; font-weight: 600;">رسالة خاصة جداً من حبيبك حمزة.. أدخلي كلمة السر</p>
+                <input type="password" id="password-input" placeholder="اكتبي love هنا...">
+                <br>
+                <button class="unlock-btn" onclick="checkPassword()">افتحي الرسالة 🔓</button>
+                <p id="error-msg" class="error-msg">كلمة السر خطأ يا رودي، جربي تكتبي love 🥺</p>
+            </div>
+        </div>
+
+        <!-- المحتوى الرئيسي -->
+        <div id="main-content">
+            <h1 class="header-title">حمزة ❤️ رودي</h1>
+            <div class="date-header">بداية حكايتنا النظيفة ✨</div>
+
+            <div class="card">
+                <b>يا أجمل صدفة في حياتي كلها يا رودي.. ✨</b>
+                من أول دقيقة عيني جت عليكي فيها على التيك توك، وعقلي وقلبي اتخطفوا تماماً! حسيت إن في حاجة فيكي نادتني، روحك الضاحكة، رقتك، وجمالك اللي ملوش مثيل. ومن اليوم ده وأنتي بقيتي السعادة والضحكة اللي بتنورلي كل أيامي.
+            </div>
+
+            <!-- العداد الزمني -->
+            <div class="counter-box">
+                <div class="time-unit">
+                    <span id="days">0</span>
+                    <label>يوم</label>
+                </div>
+                <div class="time-unit">
+                    <span id="hours">0</span>
+                    <label>ساعة</label>
+                </div>
+                <div class="time-unit">
+                    <span id="minutes">0</span>
+                    <label>دقيقة</label>
+                </div>
+                <div class="time-unit">
+                    <span id="seconds">0</span>
+                    <label>ثانية</label>
+                </div>
+            </div>
+
+            <div class="card" style="background: #fff0f3; border: 1px dashed #ff4d6d;">
+                <b>مستني أول خروجة بينا بفارغ الصبر يا رودي! 🥺❤️</b>
+                صح لسه مخرجناش وقعدنا سوا وجه لوجه، بس إحساسي بيكي أقوى من أي مسافة في الدنيا. بطمن بيكي وأنا بكلمك، ومستني اليوم اللي أقعد فيه قدامك وأمسك إيديكي وأشوف عينيكي الحقيقية.. ووقتها هعوضك عن كل ثانية بعتيها عني!
+            </div>
+
+            <div class="card">
+                <b>ليه بحبك أنتِ بالذات يا رودي؟ 👑</b>
+                <ul class="reasons-list">
+                    <li>علشان ضحكتك بتغير مود يومي كله في ثانية.</li>
+                    <li>علشان طيبة قلبك ونقاء روحك اللي ملهمش زي.</li>
+                    <li>علشان طريقة كلامك واهتمامك بيا بيخلوني أحس إني ملك.</li>
+                    <li>علشان أنتي الشخص الوحيد اللي بتفهميني من غير ما أتكلم.</li>
+                    <li>علشان أنتي أجمل وأحن بنوتة دخلت حياتي يا رودي.</li>
+                </ul>
+            </div>
+
+            <div class="photo-grid">
+                <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80" alt="Love Memory 1">
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80" alt="Love Memory 2">
+            </div>
+
+            <div class="card">
+                <b>وعد مني ليكي يا توأم روحي 🤝❤️</b>
+                أوعدك إني هفضل السند والظهر ليكي، هفضل أحبك وأحميكي وأحترمك وأحافظ عليكي، وهعمل كل اللي أقدر عليه علشان أشوف الضحكة دي ديماً على وشك.
+            </div>
+
+            <div class="card" style="background: #fff0f3;">
+                <b>بحبك قد الكون كله يا رودي.. 💍❤️</b>
+                ربنا يديمك في حياتي نعمة جميلة، وما يحرمني منك ولا من وجودك الجميل أبداً، وتفضلي ديماً حبيبتي وأميرتي وملاكي الصغير. بحبك جداً!
+            </div>
+        </div>
+
+        <!-- مشغل الصوتيات -->
+        <div class="audio-player">
+            <div class="audio-info">
+                <img id="album-img" src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2" alt="Tوليت">
+                <span>توليت - سيب نفسك 🎵</span>
+            </div>
+            <button class="play-btn" id="play-btn" onclick="toggleAudio()">▶</button>
+            <audio id="bg-audio" loop>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+            </audio>
+        </div>
+    </div>
+
+    <script>
+        // إنشاء القلوب المموهة في الخلفية
+        function createBlurHeart() {
+            const bg = document.getElementById("blur-hearts-bg");
+            const heart = document.createElement("div");
+            heart.classList.add("blur-heart");
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 4 + 4) + "s";
+            heart.style.fontSize = (Math.random() * 20 + 20) + "px";
+            bg.appendChild(heart);
+
+            setTimeout(() => { heart.remove(); }, 8000);
+        }
+        setInterval(createBlurHeart, 350);
+
+        // فتح الرسالة وتكبير المشغل
+        const correctPassword = "love";
+        const audio = document.getElementById("bg-audio");
+        const playBtn = document.getElementById("play-btn");
+        const albumImg = document.getElementById("album-img");
+
+        function checkPassword() {
+            const input = document.getElementById("password-input").value;
+            const errorMsg = document.getElementById("error-msg");
+            
+            if(input.toLowerCase() === correctPassword) {
+                document.getElementById("lock-screen").style.opacity = "0";
+                setTimeout(() => {
+                    document.getElementById("lock-screen").style.display = "none";
+                    document.getElementById("main-content").style.display = "block";
+                    
+                    // تشغيل الأغنية تلقائياً
+                    audio.play().then(() => {
+                        playBtn.innerText = "⏸";
+                        albumImg.classList.add("playing");
+                    }).catch(e => {
+                        console.log("Audio play blocked");
+                    });
+                }, 800);
+            } else {
+                errorMsg.style.display = "block";
+            }
+        }
+
+        // العداد الزمني من تاريخ الارتباط (شهر سابق)
+        const startDate = new Date("2026-10-11T00:00:00"); 
+        setInterval(() => {
+            const now = new Date();
+            const diff = now - startDate;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById("days").innerText = days;
+            document.getElementById("hours").innerText = hours;
+            document.getElementById("minutes").innerText = minutes;
+            document.getElementById("seconds").innerText = seconds;
+        }, 1000);
+
+        // زر التوقف والتشغيل
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerText = "⏸";
+                albumImg.classList.add("playing");
+            } else {
+                audio.pause();
+                playBtn.innerText = "▶";
+                albumImg.classList.remove("playing");
+            }
+        }
+    </script>
+</body>
+</html>
